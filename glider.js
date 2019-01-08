@@ -5,7 +5,7 @@
   \___//_//_/ \_,_/ \__//_/  (_)__/ //___/
                               |___/
 
-  Version: 1.6.2
+  Version: 1.6.4
   Author: Nick Piscitelli (pickykneee)
   Website: https://nickpiscitelli.com
   Documentation: http://nickpiscitelli.github.io/Glider.js
@@ -50,7 +50,8 @@
         // easeInQuad
         easing: function (x, t, b, c, d) {
           return c * (t /= d) * t + b
-        }
+        },
+        addTrack: true
       },
       settings
     )
@@ -63,13 +64,19 @@
     // extend breakpoint settings
     _._opt = _.opt
 
-    // create track and wrap slides
-    _.track = document.createElement('div')
-    _.track.className = 'glider-track'
-    _.ele.appendChild(_.track)
-    while (_.ele.children.length !== 1) {
-      _.track.appendChild(_.ele.children[0])
+    if (_.opt.addTrack) {
+      // create track and wrap slides
+      _.track = document.createElement('div')
+      _.ele.appendChild(_.track)
+      while (_.ele.children.length !== 1) {
+        _.track.appendChild(_.ele.children[0])
+      }
+    } else {
+      // first and only child is the track
+      _.track = _.ele.children[0]
     }
+
+    _.track.classList.add('glider-track')
 
     // start glider
     _.init()
@@ -271,9 +278,9 @@
 
       var itemStart = _.itemWidth * index
 
-      var itemEnd = itemStart + _.itemWidth
+      var itemEnd = itemStart + _.itemWidth;
 
-      slideClasses.forEach(function (className) {
+      [].forEach.call(slideClasses, function (className) {
         /^left|right/.test(className) && slideClasses.remove(className)
       })
       slideClasses.toggle('active', _.slide === index)
@@ -490,8 +497,8 @@
     var replace = _.ele.cloneNode(true)
 
     var clear = function (ele) {
-      ele.removeAttribute('style')
-      ele.classList.forEach(function (className) {
+      ele.removeAttribute('style');
+      [].forEach.call(ele.classList, function (className) {
         /^glider/.test(className) && ele.classList.remove(className)
       })
     }
